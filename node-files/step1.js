@@ -1,13 +1,19 @@
 "use strict";
+
 const argv = process.argv;
-//console.log(argv);
+
+
 const fsP = require("fs/promises");
 
-async function cat(path){
-    try{
+/**
+ * Accepts a file path and console logs the contents,
+ * or notifies of non-existing file and exits.
+ */
+async function cat(path) {
+    try {
         let contents = await fsP.readFile(path, "utf8");
         console.log(contents);
-    } catch (err){
+    } catch (err) {
         console.log("No such file exists.");
         console.log(err);
         process.exit(1);

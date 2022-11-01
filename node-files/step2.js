@@ -1,14 +1,18 @@
 "use strict";
+
 const argv = process.argv;
-//console.log(argv);
 const fsP = require("fs/promises");
 const axios = require("axios");
 
-async function cat(path){
-    try{
+/**
+ * Accepts a file path and console logs the contents,
+ * or notifies of non-existing file and exits.
+ */
+async function cat(path) {
+    try {
         let contents = await fsP.readFile(path, "utf8");
         console.log(contents);
-    } catch (err){
+    } catch (err) {
         console.log("No such file exists.");
         console.log(err);
         process.exit(1);
@@ -16,29 +20,44 @@ async function cat(path){
 }
 
 
-
-async function webCat(url){
-    try{
+/**
+ * Accepts a valid structed URL and console logs the first 80 characters,
+ * or notifies of non-existing file and exits.
+ */
+async function webCat(url) {
+    console.debug("webCat ran!")
+    // debugger;
+    try {
         const resp = await axios.get(url);
-        console.log(resp.data.slice(0,80), "...");
-    } catch (err){
+        console.log(resp.data.slice(0, 80), "...");
+    } catch (err) {
+        
         console.log("No such route exists.");
-        // console.log(err.status, err.statusText);
+        console.log(err.message);
         process.exit(2)
     }
 }
 
 
-let isUrl;
-try{
-    let url = new URL(argv[2])
-    isUrl = true;
-} catch(err) {
-    isUrl = false;
+
+/**
+ * Determines type of input and displays appropriate output.
+ */
+function determineOutput() {
+    let isUrl;
+    // debugger;
+    try {
+        new URL(argv[2])
+        isUrl = true;
+    } catch (err) {
+        isUrl = false;
+    }
+
+    if (isUrl) {
+        webCat(argv[2])
+    } else {
+        cat(argv[2]);
+    }
 }
 
-if(isUrl){
-    webCat(argv[2])
-}else{
-    cat(argv[2]);
-}
+determineOutput();
