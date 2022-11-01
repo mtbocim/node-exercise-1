@@ -15,9 +15,7 @@ async function cat(path){
     }
 }
 
-//cat(process.argv[0]); NO!
 
-// cat(argv[2]);
 
 async function webCat(url){
     try{
